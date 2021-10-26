@@ -65,13 +65,18 @@ drawBtn.addEventListener("click", function() {
 })
 
 standBtn.addEventListener("click", function() {
-    console.log("im alive, LET'S FUCKIN GOOOO BABAY")
-    console.log(player.isAlive)
     if (player.isAlive) {
         while (player.isAlive) {
             dealer.drawCard()
             changeCounter(false)
-            if (dealer.getSum() <= 21 && dealer.getSum() > player.getSum()) {
+            if (dealer.getSum() === player.getSum()) {
+                if (dealer.getSum() < 21 && dealer.getSum() > 17) {
+                player.isAlive = false
+                currentMessage.textContent = "Looks Like It's a Draw! Press New Game to Play Again."
+                break
+                }
+            }
+            else if (dealer.getSum() <= 21 && dealer.getSum() > player.getSum()) {
                 if (dealer.getSum() >= 17) {
                     currentMessage.textContent = "Sorry... Looks Like I Won This Time. 😞 Press New Game to Play Again!"
                     player.isAlive = false;
