@@ -7,10 +7,17 @@ class Person {
                 this.hand.push(Math.floor((Math.random() * 11) +1))
             }
         }
-        this.getSum = function () {
+        this.getSum = function (human = true) {
             let sum = 0
             for (let i = 0; i < this.hand.length; i++) {
                 sum += this.hand[i] 
+            }
+            for (let i = 0; i < this.hand.length; i++){
+                if (this.hand[i] === 11 && sum > 21) {
+                    sum -= this.hand[i]
+                    this.hand[i] = 1
+                    sum += this.hand[i]
+                }
             }
             return sum
         }
@@ -69,15 +76,15 @@ standBtn.addEventListener("click", function() {
         while (player.isAlive) {
             dealer.drawCard()
             changeCounter(false)
-            if (dealer.getSum() === player.getSum()) {
-                if (dealer.getSum() < 21 && dealer.getSum() > 17) {
+            if (dealer.getSum(human = false) === player.getSum()) {
+                if (dealer.getSum(human = false) < 21 && dealer.getSum(human = false) > 17) {
                 player.isAlive = false
                 currentMessage.textContent = "Looks Like It's a Draw! Press New Game to Play Again."
                 break
                 }
             }
-            else if (dealer.getSum() <= 21 && dealer.getSum() > player.getSum()) {
-                if (dealer.getSum() >= 17) {
+            else if (dealer.getSum(human = false) <= 21 && dealer.getSum(human = false) > player.getSum()) {
+                if (dealer.getSum(human = false) >= 17) {
                     currentMessage.textContent = "Sorry... Looks Like I Won This Time. 😞 Press New Game to Play Again!"
                     player.isAlive = false;
                     break
@@ -85,9 +92,9 @@ standBtn.addEventListener("click", function() {
                 else {
                     continue
                 }
-            } else if (dealer.getSum() < 17 && dealer.getSum() < player.getSum()) {
+            } else if (dealer.getSum(human = false) < 17 && dealer.getSum(human = false) < player.getSum()) {
                 continue
-            } else if (dealer.getSum() < 17 && dealer.getSum() < player.getSum()) {
+            } else if (dealer.getSum(human = false) < 17 && dealer.getSum(human = false) < player.getSum()) {
                 continue
             } else {
                 currentMessage.textContent = "NICE!!!! 🎉 YOU WON! Press New Game to Play Again."
@@ -101,6 +108,8 @@ standBtn.addEventListener("click", function() {
 //checks whether or not the player is over 21. runs every time draw is pushed.  if over 21,  sets player alive to false (doesn't allow them to click anything)
 function gameStatus() { 
     if (player.isAlive){
+        changeCounter();
+        changeCounter(human=false)
         if (player.getSum() < 21) {
             currentMessage.innerText = "Would you like to stand or draw a card?"
         } else if (player.getSum() === 21) {
@@ -119,6 +128,6 @@ function changeCounter(human= true) {
         playerValue.textContent = `Player: ${player.hand} (total: ${player.getSum()})`
     }
     else {
-        dealerValue.textContent = `Dealer: ${dealer.hand} (total: ${dealer.getSum()})`
+        dealerValue.textContent = `Dealer: ${dealer.hand} (total: ${dealer.getSum(human = false)})`
     }
 }

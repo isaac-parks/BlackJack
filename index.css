@@ -48,6 +48,29 @@ button {
     border-radius: 1rem;
 }
 
+.chip-box {
+    text-align: left;
+}
+
+
+.bet-box {
+    display: flex;   
+}
+
+.bet-box button {
+    background-image: url("images/chips.jpg");
+    border-radius: 50%;
+    height: 85px;
+    width: 20px;
+}
+
+.bet-box :nth-child(1) {
+    background-image: url("images/chip-1.jpg");
+    background-position: center;
+    background-position: center;
+    background-size: 100px;
+}
+
 @media screen and (min-width: 850px) {
     html {
         font-size: 20px;
