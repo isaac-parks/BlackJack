@@ -1,0 +1,67 @@
+html {
+    font-size: 10px;
+    font-family: 'Irish Grover', cursive;
+    background-image: url("images/green.jpg");
+    
+    
+}
+
+body {
+    text-align: center;
+    max-width: 100%;
+    font-size: 2rem;
+    color: white;
+}
+
+h1 { 
+    color: goldenrod;
+    text-shadow: 0.1rem 0.1rem black;
+}
+
+p {
+    font-size: 3rem;
+    border-bottom: 0.3rem solid black;
+    margin-bottom: 5rem;
+    padding-bottom: 1rem;
+}
+
+.players-box, .buttons-box {
+    text-align:left;
+}
+
+.buttons-box {
+    margin-top: 5rem;
+    border-top: 0.2rem solid black;
+    padding-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+button {
+    flex: 150px;
+    font-size: 3rem;
+    font-family: 'Irish Grover', cursive;
+    color: white;
+    background-color: rgb(3, 99, 3);
+    border: 0.5rem solid black;
+    border-radius: 1rem;
+}
+
+@media screen and (min-width: 850px) {
+    html {
+        font-size: 20px;
+    }
+    body {
+        max-width: 70%;
+        margin: auto;
+    }
+    .buttons-box {
+        flex-direction: row-reverse;
+    }
+    .buttons-box :nth-child(2) {
+        order: -1;
+    }
+}
+
+
