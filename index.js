@@ -4,7 +4,7 @@ class Person {
         this.hand = []
         this.drawCard = function (number = 1) {
             for (let i = 0; i < number; i++) {
-                this.hand.push(Math.floor((Math.random() * 11) +1))
+                this.hand.push(Math.floor((Math.random() * 10) + 2))
             }
         }
         this.getSum = function (human = true) {
@@ -44,7 +44,7 @@ const drawBtn = document.querySelector("#draw-btn")
 const standBtn = document.querySelector("#stand-btn")
 
 //gives initial conditions, only ran when newbutton is pushed
-function renderGame() {
+let renderGame = () => {
     player.isAlive = true
     player.drawCard(2)
     dealer.drawCard()
@@ -54,7 +54,7 @@ function renderGame() {
 }
 
 //click new game button - refreshes player/dealer hand, sets player alive
-newGameBtn.addEventListener("click", function() {
+newGameBtn.addEventListener("click", () => {
     document.querySelector("#sub-head").textContent = ""
     player.hand = new Array()
     dealer.hand = new Array()
@@ -63,7 +63,7 @@ newGameBtn.addEventListener("click", function() {
 })
 
 //click draw button, only works if player is alive, player draws a card, updates UI, checks game status
-drawBtn.addEventListener("click", function() {
+drawBtn.addEventListener("click", () =>{
     if (player.isAlive) {
         player.drawCard()
         changeCounter()
@@ -71,7 +71,7 @@ drawBtn.addEventListener("click", function() {
     }
 })
 
-standBtn.addEventListener("click", function() {
+standBtn.addEventListener("click", () =>{
     if (player.isAlive) {
         while (player.isAlive) {
             dealer.drawCard()
@@ -106,7 +106,7 @@ standBtn.addEventListener("click", function() {
 })
 
 //checks whether or not the player is over 21. runs every time draw is pushed.  if over 21,  sets player alive to false (doesn't allow them to click anything)
-function gameStatus() { 
+gameStatus = () => { 
     if (player.isAlive){
         changeCounter();
         changeCounter(human=false)
@@ -122,12 +122,12 @@ function gameStatus() {
     } 
 }   
 
-//quick way to update player and dealer hands
-function changeCounter(human= true) {
+//update player and dealer hands
+changeCounter = (human=true) => {
     if (human) {
-        playerValue.textContent = `Player: ${player.hand} (total: ${player.getSum()})`
+        playerValue.innerHTML = `Player: ${player.hand} <br>(total: ${player.getSum()})`
     }
     else {
-        dealerValue.textContent = `Dealer: ${dealer.hand} (total: ${dealer.getSum(human = false)})`
+        dealerValue.innerHTML = `Dealer:  ${dealer.hand} <br> (total: ${dealer.getSum(human = false)})`
     }
 }
