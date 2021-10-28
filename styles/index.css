@@ -1,3 +1,9 @@
+
+@import url("fonts.css");
+@import "general.css";
+@import "mobile.css";
+
+
 html {
     font-size: 10px;
     font-family: 'Irish Grover', cursive;
@@ -130,10 +136,17 @@ button {
 @media screen and (min-width: 850px) {
     html {
         font-size: 20px;
+
     }
     body {
         max-width: 70%;
         margin: auto;
+
+    
+    }
+
+    button {
+        font-size: 0px;
     }
     .buttons-box {
         flex-direction: row-reverse;

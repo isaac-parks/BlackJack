@@ -30,6 +30,7 @@ main {
 }
 
 
+
 .dealer-box, .player-box, .player-lower {
     width:100%;
     text-align: center;
@@ -58,13 +59,4 @@ main {
     margin-bottom: 1rem;
 }
 
-button {
-    width: 6.2rem;
-    height: 6.2rem;
-    border-radius: 50%;
-    border: 4px solid black;
-    font-family: 'Silkscreen';
-    font-size: 1.5rem;
-    background-color: goldenrod;
-}
 
