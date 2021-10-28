@@ -1,0 +1,70 @@
+* {
+    margin:0px;
+}
+
+html {
+    background-image: url("../images/poki.jpg");
+    color:white;
+    font-size: 100%;
+    font-family: 'Silkscreen';
+    font-weight: bold;
+    font-style: normal;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+main {
+    margin-bottom: 2rem;
+    width:80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;  
+    border: 5px solid black;
+    border-radius: 1rem;
+}
+
+
+.dealer-box, .player-box, .player-lower {
+    width:100%;
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.dealer-box p, .player-box p, .player-lower p{
+    font-size: 1.2rem;
+}
+
+.dealer-box h2, .player-box h2, .player-lower h2{
+    font-size: 2rem;
+}
+
+
+.dealer-box img, .player-box img{
+    height: 9.3rem;
+}
+
+.dealer-box img { 
+    margin-top: 1rem;
+}
+
+.player-box img { 
+    margin-bottom: 1rem;
+}
+
+button {
+    width: 6.2rem;
+    height: 6.2rem;
+    border-radius: 50%;
+    border: 4px solid black;
+    font-family: 'Silkscreen';
+    font-size: 1.5rem;
+    background-color: goldenrod;
+}
+

@@ -5,20 +5,87 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="images/sonic.gif" type="image/png">
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="styles/index2.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Irish+Grover&display=swap" rel="stylesheet">
+    <link rel="preload" href="fonts/Silkscreen-ExpandedBold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/Silkscreen-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/Silkscreen-Expanded.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/Silkscreen.woff2" as="font" type="font/woff2" crossorigin>
     <title>BlackJack</title>
 </head>
 <body>
-<main> 
-    <h1 id= "messages">Welcome to BlackJack!</h1>
-    <p id="sub-head">Press New Game to Play!</p>
+    <header class= "message-box">
+        <h1 id= "messages">Welcome to BlackJack!</h1>
+    </header>
+    <main class= "content-container">
+        <div class= "dealer-box">
+            <h2 id= "dealer">Dealer's Hand: </h2>
+            <div class="dealer-card-box">
+                <img src="cards/ace.svg">
+            </div>
+        </div>
+        <div id= "player-cards"class= "player-box">
+            <img src="cards/ace.svg">
+            <h2 id = "player">Your Hand: </h2>
+        </div>
+        <div class= "player-lower">
+            <div class= "buttons-box">
+                <button id="draw-btn">HIT</button>
+                <button id="stand-btn">STAND</button>
+                <button id="newgame-btn">NEW GAME</button>
+            </div>
+            <div class = "chip-box">
+                <h2 id= "chips">Chips: </h2>
+                <h2 id = "current-bet">Current Bet:</h2>
+            </div>
+            <div class= "bet-box">
+                <button id= "one">1</button>
+                <button id ="ten">10</button>
+                <button id = "onehundred">100</button>
+                <button id = "fivehundred">500</button>
+            </div>
+        </div>
+    <script src="scripts/index.js"></script> 
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+    
+    <header class= "messages"
+        <h1 id= "messages">Welcome to BlackJack!</h1>
+        <p id="sub-head">Press New Game to Play!</p>
+    </header>
     <div class= "players-box">
         <div class= "words">
             <h2 id= "dealer">Dealer: </h2>
-            <h2 id = "player">Player:</h2>
+            <h2 id = "player">Player: <img src="icons/ace.svg"></h2>
         </div>
         <img src="images/zero-two.png" alt="z2" type="image/png">
     </div>
@@ -39,6 +106,6 @@
     </div>
     <button class= "clear-bet">Clear Bet</button>
 </main>
-<script src="index.js"></script>    
+
 </body>
 </html>

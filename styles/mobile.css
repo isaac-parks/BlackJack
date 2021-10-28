@@ -1,0 +1,28 @@
+@import "index2.css";
+@import "general.css";
+@import "fonts.css";
+
+
+@media screen and (max-width: 1100px) {
+    html {
+        font-size: 80%;
+    }
+    body {
+        width: 100%;
+    }
+    
+    main {
+        width: 100%;
+        border-top: 4px solid black;
+        border-radius: 0px;
+    }
+    .bet-box {
+        max-width: 100%;
+        display: grid;
+        grid-template-columns: repeat(13, 1fr);
+        display: flex;
+        flex-direction: column;
+    }
+    
+    
+}

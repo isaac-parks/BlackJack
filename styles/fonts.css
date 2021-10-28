@@ -1,0 +1,42 @@
+@font-face {
+    font-family: 'Silkscreen Expanded';
+    src: url('../fonts/Silkscreen-ExpandedBold.woff2') format('woff2'),
+        url('../fonts/Silkscreen-ExpandedBold.woff') format('woff'),
+        url('../fonts/Silkscreen-ExpandedBold.ttf') format('truetype'),
+        url('../fonts/Silkscreen-ExpandedBold.svg#Silkscreen-ExpandedBold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Silkscreen';
+    src: url('../fonts/Silkscreen-Bold.woff2') format('woff2'),
+        url('../fonts/Silkscreen-Bold.woff') format('woff'),
+        url('../fonts/Silkscreen-Bold.ttf') format('truetype'),
+        url('../fonts/Silkscreen-Bold.svg#Silkscreen-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Silkscreen Expanded';
+    src: url('../fonts/Silkscreen-Expanded.woff2') format('woff2'),
+        url('../fonts/Silkscreen-Expanded.woff') format('woff'),
+        url('../fonts/Silkscreen-Expanded.ttf') format('truetype'),
+        url('../fonts/Silkscreen-Expanded.svg#Silkscreen-Expanded') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Silkscreen';
+    src: url('../fonts/Silkscreen.woff2') format('woff2'),
+        url('../fonts/Silkscreen.woff') format('woff'),
+        url('../fonts/Silkscreen.ttf') format('truetype'),
+        url('../fonts/Silkscreen.svg#Silkscreen') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
