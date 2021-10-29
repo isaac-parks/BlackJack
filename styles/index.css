@@ -3,196 +3,173 @@
 @import "general.css";
 @import "mobile.css";
 
-
-html {
-    font-size: 10px;
-    font-family: 'Irish Grover', cursive;
-    background-image: url("images/green.jpg");
-}
-
-
-
-body {
-    margin:0px;
-    text-align: center;
-    font-size: 2rem;
+.message-box {
+    font-size: 0.8rem;
+    width: 90%;
+    margin-top:1.5rem;
+    margin-bottom:1.5rem;
+    border: 4px solid #3061E3;
+    border-radius: 1rem;
+    background-color:black;
     color: white;
+    text-align: center;
 }
 
-h1 { 
-    color: goldenrod;
-    text-shadow: 0.1rem 0.1rem black;
+.message-box h1 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
 }
 
-p {
-    font-size: 3rem;
-    border-bottom: 0.3rem solid black;
-    margin-bottom: 5rem;
-    padding-bottom: 1rem;
+.player-box {
+    margin-bottom: 0rem;
 }
 
-#sub-head {
-    margin-bottom: 0px;
-}
-
-.players-box, .buttons-box {
-    text-align:left;
-}
-.words {
-    margin:0px;
-    max-height: 100%;
-}
-
-.words h2 {
-    margin:0px;
-}
-.players-box {
+.player-card-box{ 
     display: flex;
-    grid-template-columns: 60% 1fr;
-    height: 20rem;
-    justify-content: flex-end;
-
+    flex-direction: row;
 }
-
-.players-box img {
-    flex: 1;
-    max-height: 100%;
-    max-width: 100%;
-    object-fit: contain;
-    vertical-align: top ;
-    padding-left: 15%;
-}
-
-
-.words {
-    flex: 3;
-    display: flex;
-    flex-direction: column;
+.player-lower {
+    border-top:4px solid black;
+    margin-bottom: 0rem;
+    margin-top:1rem;
+    height:100%;
+    display:flex;
     justify-content: space-around;
-}
-/*
-.players-box img{
-    grid-column: 2 / 3;
-    grid-row: 1;
-    float: right;
-    padding-top: 1rem;
-    max-width: 100%;
-    max-height: 50%;
-    
-}
-
-#dealer {
-    grid-column: 1 / 2;
-    grid-row: 1
-}
-
-#player {
-    grid-column: 1 / 2;
-}
-
-*/
-.buttons-box {
-    margin-top: 1rem;
-    border-top: 0.2rem solid black;
-    padding-top: 1rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2px;
 }
 
 button {
-    flex: 150px;
-    font-size: 3rem;
-    font-family: 'Irish Grover', cursive;
-    color: white;
-    background-color: rgb(3, 99, 3);
-    border: 0.5rem solid black;
-    border-radius: 1rem;
+    width: 6.2rem;
+    height: 6.2rem;
+    border-radius: 50%;
+    border: 4px solid black;
+    font-family: 'Silkscreen';
+    font-size: 1.5rem;
+    background-color: goldenrod;
+}
+
+.bet-box, .buttons-box, .chip-box {
+    flex: 1;
+}
+
+.buttons-box {
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+
+}
+
+#draw-btn {
+
+    grid-column: 6 / 9;
+    grid-row: 1
+}
+
+#stand-btn {
+    background-color:red;
+    grid-column: 6 / 9;
+    grid-row: 3
+}
+
+
+#newgame-btn {
+    background-color: green;
+    grid-column: 9 / 12;
+    grid-row: 2
 }
 
 .chip-box {
-    text-align: left;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
+
+.chip-box h2 {
+    flex: 1;
+    padding-top: 2rem;
+}
+
 
 
 .bet-box {
-    display: flex;   
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
 }
 
-.bet-box button {
-    background-image: url("images/chips.jpg");
-    border-radius: 50%;
-    height: 85px;
-    width: 20px;
+#one {
+    background-color: green;
+    grid-column: 9 / 12;
+    grid-row: 2
 }
 
-.bet-box :nth-child(1) {
-    background-image: url("images/chip-1.jpg");
-    background-position: center;
-    background-position: center;
-    background-size: 100px;
+#ten {
+    background-color:red;
+    grid-column: 6 / 9;
+    grid-row: 3
 }
 
-@media screen and (min-width: 850px) {
+#onehundred {
+    grid-column: 6 / 9;
+    grid-row: 1
+}
+
+#fivehundred {
+    background-color:purple;
+    grid-column: 5 / 6;
+    grid-row:2;
+}
+
+@media screen and (max-width: 1100px) {
     html {
-        font-size: 20px;
-
+        font-size: 80%;
     }
     body {
-        max-width: 70%;
-        margin: auto;
-
-    
-    }
-
-    button {
-        font-size: 0px;
-    }
-    .buttons-box {
-        flex-direction: row-reverse;
-        margin-top: 1rem;
-    }
-    .buttons-box :nth-child(2) {
-        order: -1;
-    }
-
-    .players-box {
-        display: flex;
-        grid-template-columns: 60% 1fr;
-        height: 20rem;
-    
+        width: 100%;
     }
     
-    .players-box img {
-        flex: 1;
-        max-height: 100%;
+    main {
+        width: 100%;
+        border-top: 4px solid black;
+        border-radius: 0px;
+    }
+
+    .player-lower button {
+        width: 3.2rem;
+        height: 3.2rem;
+        border: 4px solid black;
+        font-family: 'Silkscreen';
+        font-size: 1.5rem;
+        background-color: goldenrod;
+    }
+     .player-lower h2 {
+         font-size: 1.3rem;
+     }
+    .bet-box {
         max-width: 100%;
-        object-fit: contain;
-        padding-left: 20%;
-    
-    
-    }
-    
-    .words {
-        flex: 1;
-    }
-}
-/*
-    .players-box {
-        display:flex;
+        display: flex;
+        flex-direction: column;
         flex-wrap: wrap;
-        height:100%;
-        
-    }
-    img {
-        object-fit: contain;
-        overflow: hidden;
-        max-height: 18%;
-        max-width: 18%;
-        flex: 3;
+        columns: 2;
+        gap: 10px;
     }
 
-    .players-box h2 {
-        flex: 1;
+    #one, #ten, #onehundred, #fivehundred, #draw-btn, #stand-btn, #newgame-btn {
+        border-radius: 0rem;
+        width: 100%;
+
     }
+
+    .buttons-box {
+        display:flex;
+        gap: 10px;
+        flex-direction: column;
+    }
+
+    .buttons-box button {
+        height:100%;
+    }
+
+
+    
 }
+

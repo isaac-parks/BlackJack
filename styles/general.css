@@ -3,7 +3,8 @@
 }
 
 html {
-    background-image: url("../images/poki.jpg");
+    background-image: url("../images/sonic-casino.jpg");
+    background-position: bottom;
     color:white;
     font-size: 100%;
     font-family: 'Silkscreen';
@@ -25,11 +26,29 @@ main {
     flex-direction: column;
     align-items: center;
     justify-content: center;  
-    border: 5px solid black;
+    border: 5px solid #3061E3;
     border-radius: 1rem;
 }
 
+span {
+    color: gold;
+    font-size: 2rem;
+}
+.dealer-cards-container, .player-cards-container {
+    line-height: 0px!important;
+}
+img {
+    border:0.4rem solid #3061E3;
+    line-height: 0px!important;
+  }
 
+p {
+    color:gold;
+}
+
+h2 {
+    color: #3061E3
+}
 
 .dealer-box, .player-box, .player-lower {
     width:100%;
@@ -39,7 +58,7 @@ main {
 }
 
 .dealer-box p, .player-box p, .player-lower p{
-    font-size: 1.2rem;
+    font-size: 1.5rem;
 }
 
 .dealer-box h2, .player-box h2, .player-lower h2{
