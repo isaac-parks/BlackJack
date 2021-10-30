@@ -28,10 +28,13 @@ player.adjustCurrentBet = (value) => {
 
 if (localStorage.getItem("chips")) {
     player.chips = localStorage.getItem("chips")
+    if (!player.chips) {
+        player.chips = 2000
+    }
 }
 
 else { 
-    player.chips = 2000
+    player.chips = 10000
     localStorage.setItem("chips", player.chips)
 }
 
