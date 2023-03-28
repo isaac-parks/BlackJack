@@ -10,4 +10,4 @@ and did the same with methods.
 
 Take a look at the code and enjoy! Don't go broke 😊.
 
-(you can adjust chip count throuhg local storage in case you do ;) )
+(you can adjust chip count through local storage in case you do ;) )
