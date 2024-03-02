@@ -128,7 +128,7 @@ function checkDraw({ player, dealer }) {
     player.win = true;
   } else if (player.getSum() > 21) {
     pushToQueue(changeMessageDisplay, {
-      text: "Sorry... Looks Like You Went Over 21. 😞 Press New Game to Play Again!",
+      text: "Sorry... Looks Like You Went Over 21. 😞 Resetting...",
     });
 
     player.isAlive = false;
