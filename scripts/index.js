@@ -1,201 +1,107 @@
-//creating player/dealer objects and player alive variable
-let player = new Person()
-let dealer = new Person() 
-player.isAlive = false
-player.chips = 0
-player.win = null
-player.currentBet = 0 
-player.checkWin = () => {
-    if (player.win) {
-        player.chips += (player.currentBet * 2)
-        player.currentBet = 0
-        player.win = null
-        localStorage.setItem("chips", player.chips)
-        refreshUI()
-    }
-    else {
-        player.chips
-        player.currentBet = 0
-        player.win = null
-        localStorage.setItem("chips", player.chips)
-        refreshUI()
-    }
+const eventQueue = [];
+
+function createEvents(player, dealer) {
+  const newGameBtn = document.querySelector("#newgame-btn");
+  const drawBtn = document.querySelector("#draw-btn");
+  const standBtn = document.querySelector("#stand-btn");
+  const oneBtn = document.querySelector("#one");
+  const tenBtn = document.querySelector("#ten");
+  const oneHundredBtn = document.querySelector("#onehundred");
+  const fiveHundredBtn = document.querySelector("#fivehundred");
+  //click new game button - refreshes player/dealer hand, sets player alive
+  oneBtn.addEventListener(
+    "click",
+    registerEvent("adjustBet", { amount: 1, player: player })
+  );
+
+  tenBtn.addEventListener(
+    "click",
+    registerEvent("adjustBet", { amount: 10, player: player })
+  );
+
+  oneHundredBtn.addEventListener(
+    "click",
+    registerEvent("adjustBet", { amount: 100, player: player })
+  );
+
+  fiveHundredBtn.addEventListener(
+    "click",
+    registerEvent("adjustBet", { amount: 500, player: player })
+  );
+
+  drawBtn.addEventListener(
+    "click",
+    registerEvent("draw", { player: player, dealer: dealer })
+  );
+
+  standBtn.addEventListener(
+    "click",
+    registerEvent("checkPlayerWin", { player: player, dealer: dealer })
+  );
+
+  newGameBtn.addEventListener(
+    "click",
+    registerEvent("createNewGame", { player: player, dealer: dealer })
+  );
 }
 
-player.adjustCurrentBet = (value) => {
-    return player.currentBet += value
+function registerEvent(name, args) {
+  const events = {
+    createNewGame: createNewGame,
+    draw: draw,
+    checkPlayerWin: checkPlayerWin,
+    adjustBet: adjustBet,
+    changeMessageDisplay: changeMessageDisplay,
+  };
+
+  return () => pushToQueue(events[name], args);
 }
 
-if (localStorage.getItem("chips")) {
-    player.chips = localStorage.getItem("chips")
-    if (!player.chips) {
-        player.chips = 2000
-    }
+function pushToQueue(event, args = {}) {
+  for (const [arg, val] of Object.entries(args)) {
+    eventQueue.push({ [arg]: val, type: "argument" });
+  }
+  eventQueue.push(event);
 }
 
-else { 
-    player.chips = 10000
-    localStorage.setItem("chips", player.chips)
+function checkEventQueue() {
+  return !!eventQueue.length;
 }
 
-let currentMessage = document.querySelector("#messages")
-let betText = document.querySelector("#current-bet")
-let chipsText = document.querySelector("#chips")
-chipsText.textContent = `${player.chips}`
-let playerValue = document.querySelector("#player")
-let dealerValue = document.querySelector("#dealer")
-let playerChips = document.querySelector("#chips")
-let dealerCardBox = document.querySelector("#dealer-cards-container")
-let cardBox = document.querySelector("#player-cards-container")
-if (!player.isAlive){dealerCardBox.style.opacity = "0"}
-if (!player.isAlive){cardBox.style.opacity = "0"}
-//<button id="newgame-btn">NEW GAME</button>
-//<h2 class= "chips">Chips: </h2>
-//<h2 class= "bet">Bet: </h2>
-//<button id="draw-btn">DRAW</button>
-//button id="stand-btn">STAND</button>
-const newGameBtn = document.querySelector("#newgame-btn")
-const drawBtn = document.querySelector("#draw-btn")
-const standBtn = document.querySelector("#stand-btn")
-const oneBtn = document.querySelector("#one")
-const tenBtn = document.querySelector("#ten")
-const oneHundredBtn = document.querySelector("#onehundred")
-const fiveHundredBtn = document.querySelector("#fivehundred")
-
-//gives initial conditions, only ran when newbutton is pushed
-
-//click new game button - refreshes player/dealer hand, sets player alive
-oneBtn.addEventListener("click", () => {
-    if (!player.isAlive) {
-        if (player.chips > 0) {
-            let bet = player.adjustCurrentBet(1)
-            player.chips--
-            
-        }
-        if (player.chips < 0) {
-            let retract = player.chips - 0
-            player.currentBet += retract
-            player.chips = 0
-        }
+function executeEvent() {
+  const args = {};
+  while (true) {
+    const event = eventQueue.shift();
+    if (event.type && event.type === "argument") {
+      delete event.type;
+      Object.assign(args, event);
+      continue;
     }
-    refreshUI()
-})
+    return event(args);
+  }
+}
 
-tenBtn.addEventListener("click", () => {
-    if (!player.isAlive) {
-        if (player.chips > 0) {
-            let bet = player.adjustCurrentBet(10)
-            player.chips -= 10
-        
-        }
-        if (player.chips < 0) {
-            let retract = player.chips - 0
-            player.currentBet += retract
-            player.chips = 0
-        }
-    }
-    refreshUI()
-})
+function loop(player, dealer, itr) {
+  let reset;
+  while (checkEventQueue()) {
+    reset = executeEvent();
+  }
 
-oneHundredBtn.addEventListener("click", () => {
-    if (!player.isAlive){
-        if (player.chips > 0) {
-            let bet = player.adjustCurrentBet(100)
-            player.chips -= 100
-            
-        }
-        if (player.chips < 0) {
-            let retract = player.chips - 0
-            player.currentBet += retract
-            player.chips = 0
-        }
-    }
-    refreshUI()
+  refreshUI({ player, dealer });
+  itr(reset);
+}
 
-})
+function startMain(player = {}, dealer = {}, initialize = false) {
+  if (initialize) {
+    ("resetting");
+    delete player;
+    delete dealer;
+    [player, dealer] = init();
+    createEvents(player, dealer);
+  }
+  const callback = (reset) => startMain(player, dealer, reset);
 
-fiveHundredBtn.addEventListener("click", () => {
-    if (!player.isAlive) {
-        if (player.chips > 0) {
-            let bet = player.adjustCurrentBet(500)
-            player.chips -= 500
-        }
-        if (player.chips < 0) {
-            let retract = player.chips - 0
-            player.currentBet += retract
-            player.chips = 0
-        }
-    }
-    refreshUI()
-})
-//click new game
-newGameBtn.addEventListener("click", () => {
-    if (player.isAlive == false && player.currentBet > 0) {
-        player.hand = new Array()
-        dealer.hand = new Array()
-        player.isAlive = true;
-        renderGame();
-    } else if (player.isAlive === true) {
-        currentMessage.textContent = `Oak's words echoed... "There's a time and place for everything but not now!"`
-    } else {
-        currentMessage.textContent = "You Must Place A Bet First!"
-    }
-})
+  setTimeout(() => loop(player, dealer, callback), 0);
+}
 
-//click draw button, only works if player is alive, player draws a card, updates UI, checks game status
-drawBtn.addEventListener("click", () =>{
-    if (player.isAlive) {
-        player.drawCard()
-        player.renderCard()
-        refreshUI()
-        gameStatus()
-    }
-})
-//stand logic (based on dealer)
-standBtn.addEventListener("click", () =>{
-    if (player.isAlive) {
-        while (player.isAlive) {
-            dealer.drawCard()
-            dealer.renderCard(true)
-            refreshUI(false)
-            if (dealer.getSum(human = false) === player.getSum()) {
-                if (dealer.getSum(human = false) < 21 && dealer.getSum(human = false) > 17) {
-                player.isAlive = false
-                player.chips += player.currentBet
-                player.currentBet = 0
-                refreshUI()
-                currentMessage.textContent = "Looks Like It's a Draw! Press New Game to Play Again."
-                break
-                }
-            }
-            else if (dealer.getSum(human = false) <= 21 && dealer.getSum(human = false) > player.getSum()) {
-                if (dealer.getSum(human = false) >= 17) {
-                    currentMessage.textContent = "Sorry... Looks Like I Won This Time. 😞 Press New Game to Play Again!"
-                    player.checkWin()
-                    player.isAlive = false;
-                    localStorage.setItem("chips", player.chips)
-                    refreshUI()
-                    break
-                }
-                else {
-                    continue
-                }
-            } else if (dealer.getSum(human = false) < 17 && dealer.getSum(human = false) < player.getSum()) {
-                continue
-            } else if (dealer.getSum(human = false) < 17 && dealer.getSum(human = false) < player.getSum()) {
-                continue
-            } else {
-                currentMessage.textContent = "NICE!!!! 🎉 YOU WON! Press New Game to Play Again."
-                player.isAlive = false; 
-                player.win = true
-                player.checkWin()
-                localStorage.setItem("chips", player.chips)
-                refreshUI()
-                break
-            }
-        } 
-    }
-})
-
-
-
+startMain({}, {}, init);
