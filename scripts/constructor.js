@@ -61,7 +61,6 @@ class Person {
       for (let card of this.hand) {
         sum += card;
       }
-
       return sum;
     };
 

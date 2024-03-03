@@ -1,5 +1,6 @@
+// TODO: refactor to use some sort of state management
 let eventQueue = [];
-
+let clearEvents = () => {};
 function createEvents(player, dealer) {
   const newGameBtn = document.querySelector("#newgame-btn");
   const drawBtn = document.querySelector("#draw-btn");
@@ -9,40 +10,55 @@ function createEvents(player, dealer) {
   const oneHundredBtn = document.querySelector("#onehundred");
   const fiveHundredBtn = document.querySelector("#fivehundred");
 
-  oneBtn.addEventListener(
-    "click",
-    registerEvent("adjustBet", { amount: 1, player: player })
-  );
+  const eventListeners = [
+    {
+      element: oneBtn,
+      event: "click",
+      handler: registerEvent("adjustBet", { amount: 1, player }),
+    },
+    {
+      element: tenBtn,
+      event: "click",
+      handler: registerEvent("adjustBet", { amount: 10, player }),
+    },
+    {
+      element: oneHundredBtn,
+      event: "click",
+      handler: registerEvent("adjustBet", { amount: 100, player }),
+    },
+    {
+      element: fiveHundredBtn,
+      event: "click",
+      handler: registerEvent("adjustBet", { amount: 500, player }),
+    },
+    {
+      element: drawBtn,
+      event: "click",
+      handler: registerEvent("draw", { player, dealer }),
+    },
+    {
+      element: standBtn,
+      event: "click",
+      handler: registerEvent("checkPlayerWin", { player, dealer }),
+    },
+    {
+      element: newGameBtn,
+      event: "click",
+      handler: registerEvent("createNewGame", { player, dealer }),
+    },
+  ];
 
-  tenBtn.addEventListener(
-    "click",
-    registerEvent("adjustBet", { amount: 10, player: player })
-  );
+  eventListeners.forEach(({ element, event, handler }) => {
+    element.addEventListener(event, handler);
+  });
 
-  oneHundredBtn.addEventListener(
-    "click",
-    registerEvent("adjustBet", { amount: 100, player: player })
-  );
+  function clearEvents() {
+    eventListeners.forEach(({ element, event, handler }) => {
+      element.removeEventListener(event, handler);
+    });
+  }
 
-  fiveHundredBtn.addEventListener(
-    "click",
-    registerEvent("adjustBet", { amount: 500, player: player })
-  );
-
-  drawBtn.addEventListener(
-    "click",
-    registerEvent("draw", { player: player, dealer: dealer })
-  );
-
-  standBtn.addEventListener(
-    "click",
-    registerEvent("checkPlayerWin", { player: player, dealer: dealer })
-  );
-
-  newGameBtn.addEventListener(
-    "click",
-    registerEvent("createNewGame", { player: player, dealer: dealer })
-  );
+  return clearEvents;
 }
 
 function registerEvent(name, args) {
@@ -89,18 +105,19 @@ async function tick(player, dealer, itr) {
     refreshUI({ player, dealer });
   }
 
-  itr(reset);
+  await itr(reset);
 }
 
-function startMain(player = {}, dealer = {}, initialize = false) {
+async function startMain(player = {}, dealer = {}, initialize = false) {
   // TODO: going to have to refactor player/dealer bc it sucks
   if (initialize) {
+    clearEvents();
     delete player;
     delete dealer;
     [player, dealer] = init();
-    createEvents(player, dealer);
+    clearEvents = createEvents(player, dealer);
   }
-  const callback = (reset) => startMain(player, dealer, reset);
+  const callback = async (reset) => await startMain(player, dealer, reset);
 
   setTimeout(async () => await tick(player, dealer, callback), 100);
 }

@@ -8,8 +8,8 @@ let dealerCardBox = document.querySelector("#dealer-cards-container");
 let cardBox = document.querySelector("#player-cards-container");
 
 function init() {
-  const player = new Person(false);
-  const dealer = new Person(true);
+  let player = new Person(false);
+  let dealer = new Person(true);
 
   let chips = localStorage.getItem("chips");
   chips = chips ? chips : 2000;
@@ -52,7 +52,6 @@ function changeMessageDisplay({ text }) {
 function adjustBet({ amount, player }) {
   if (!player.isAlive && player.chips > 0) {
     player.adjustCurrentBet(amount);
-    player.chips -= amount;
 
     return;
   }
@@ -107,34 +106,6 @@ function checkPlayerWin({ player, dealer }) {
     }
   }
 }
-//   if (dealerSum < 21 && dealerSum > 17) {
-//     player.isAlive = false;
-//     player.chips += player.currentBet;
-//     player.currentBet = 0;
-//     pushToQueue(currentMessage, {
-//       text: "Looks Like It's a Draw! Press New Game to Play Again.",
-//     });
-//     pushToQueue(gameOver, { player, dealer });
-//     break;
-//   }
-// } else if (dealerSum >= 17 && dealerSum <= 21 && dealerSum > playerSum) {
-//     pushToQueue(changeMessageDisplay, {
-//       text: "Sorry... Looks Like I Won This Time. 😞 Resetting...",
-//     });
-//     player.isAlive = false;
-//     player.win = "false";
-//     pushToQueue(gameOver, { player, dealer });
-//     break;
-//   }
-// } else {
-//   pushToQueue(changeMessageDisplay, {
-//     text: "🎉 YOU WON! Resetting.... 🎉",
-//   });
-//   player.isAlive = false;
-//   player.win = true;
-//   pushToQueue(gameOver, { player, dealer });
-//   break;
-// }
 
 function draw({ player, dealer }) {
   if (player.isAlive) {
@@ -144,18 +115,21 @@ function draw({ player, dealer }) {
 }
 
 function checkDraw({ player, dealer }) {
-  if (player.getSum() < 21 && dealer.getSum() < 17) {
+  const playerSum = player.getSum();
+  const dealerSum = dealer.getSum();
+  if (playerSum < 21 && dealerSum < 17) {
     pushToQueue(changeMessageDisplay, {
       text: "Would you like to stand or draw a card?",
     });
-  } else if (player.getSum() === 21) {
+
+    return;
+  } else if (playerSum === 21) {
     pushToQueue(changeMessageDisplay, {
       text: `🎉 YOU HIT A BLACKJACK! Resetting... 🎉`,
     });
-
     player.isAlive = false;
     player.win = true;
-  } else if (player.getSum() > 21) {
+  } else if (playerSum > 21) {
     pushToQueue(changeMessageDisplay, {
       text: "Sorry... Looks Like You Went Over 21. 😞 Resetting...",
     });
@@ -178,7 +152,7 @@ async function gameOver({ player, dealer }) {
 
   localStorage.setItem("chips", player.chips);
 
-  await new Promise((resolve) => setTimeout(resolve, 20000));
+  await new Promise((resolve) => setTimeout(resolve, 2000));
 
   return true;
 }
