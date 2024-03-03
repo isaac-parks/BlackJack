@@ -1,113 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="images/sonic.gif" type="image/png">
-    <link rel="stylesheet" href="styles/index.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="images/sonic.gif" type="image/png" />
+    <link rel="stylesheet" href="styles/index.css" />
     <title>BlackJack</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <header class="message-box">
-        <h1 id="messages">Welcome to BlackJack!</h1>
+      <h1 id="messages">Welcome to BlackJack!</h1>
     </header>
     <main class="content-container">
-        <div class="dealer-box">
-            <h2>Dealer's Hand: <span id="dealer"></span> </h2>
-            <div id="dealer-cards-container">
-                <img src="cards/ace.svg">
-            </div>
+      <div class="dealer-box">
+        <h2>Dealer's Hand: <span id="dealer"></span></h2>
+        <div id="dealer-cards-container">
+          <img src="cards/ace2.svg" />
         </div>
-        <div id="player-cards" class="player-box">
-            <div id="player-cards-container">
-                <img src="cards/ace.svg">
-            </div>
-            <h2>Your Hand: <span id="player"></span></h2>
+      </div>
+      <div id="player-cards" class="player-box">
+        <div id="player-cards-container">
+          <img src="cards/ace2.svg" />
         </div>
-        <div class="player-lower">
-            <div class="buttons-box">
-                <button id="draw-btn">HIT</button>
-                <button id="stand-btn">STAND</button>
-                <button id="newgame-btn">NEW GAME</button>
-            </div>
-            <div class="chip-box">
-                <h2>Chips: <span id="chips"></span></h2>
-                <h2>Current Bet: <span id="current-bet"></span></h2>
-            </div>
-            <div class="bet-box">
-                <button id="one">1</button>
-                <button id="ten">10</button>
-                <button id="onehundred">100</button>
-                <button id="fivehundred">500</button>
-            </div>
+        <h2>Your Hand: <span id="player"></span></h2>
+      </div>
+      <div class="player-lower">
+        <div class="buttons-box">
+          <button id="draw-btn">HIT</button>
+          <button id="stand-btn">STAND</button>
+          <button id="newgame-btn">NEW GAME</button>
         </div>
-        <script src="scripts/sub.js"></script>
-        <script src="scripts/cards.js"></script>
-        <script src="scripts/constructor.js"></script>
-        <script src="scripts/index.js"></script>
+        <div class="chip-box">
+          <h2>Chips: <span id="chips"></span></h2>
+          <h2>Current Bet: <span id="current-bet"></span></h2>
+        </div>
+        <div class="bet-box">
+          <button id="one">1</button>
+          <button id="ten">10</button>
+          <button id="onehundred">100</button>
+          <button id="fivehundred">500</button>
+        </div>
+      </div>
+      <script src="scripts/sub.js"></script>
+      <script src="scripts/cards.js"></script>
+      <script src="scripts/constructor.js"></script>
+      <script src="scripts/index.js"></script>
     </main>
-</body>
-
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- 
-
-    
-    <header class= "messages"
-        <h1 id= "messages">Welcome to BlackJack!</h1>
-        <p id="sub-head">Press New Game to Play!</p>
-    </header>
-    <div class= "players-box">
-        <div class= "words">
-            <h2 id= "dealer">Dealer: </h2>
-            <h2 id = "player">Player: <img src="icons/ace.svg"></h2>
-        </div>
-        <img src="images/zero-two.png" alt="z2" type="image/png">
-    </div>
-    <div class= "buttons-box">
-        <button id="draw-btn">DRAW</button>
-        <button id="stand-btn">STAND</button>
-        <button id="newgame-btn">NEW GAME</button>
-    </div>
-    <div class = "chip-box">
-        <h2>Chips: </h2>
-        <h2>Current Bet:</h2>
-    </div>
-    <div class= "bet-box">
-        <button id= "1">1</button>
-        <button id ="10">10</button>
-        <button id = "100">100</button>
-        <button id = "500">500</button>
-    </div>
-    <button class= "clear-bet">Clear Bet</button>
-</main>
-
-</body>
+  </body>
 </html>

@@ -1,4 +1,4 @@
-const eventQueue = [];
+let eventQueue = [];
 
 function createEvents(player, dealer) {
   const newGameBtn = document.querySelector("#newgame-btn");
@@ -8,7 +8,7 @@ function createEvents(player, dealer) {
   const tenBtn = document.querySelector("#ten");
   const oneHundredBtn = document.querySelector("#onehundred");
   const fiveHundredBtn = document.querySelector("#fivehundred");
-  //click new game button - refreshes player/dealer hand, sets player alive
+
   oneBtn.addEventListener(
     "click",
     registerEvent("adjustBet", { amount: 1, player: player })
@@ -81,19 +81,20 @@ function executeEvent() {
   }
 }
 
-function loop(player, dealer, itr) {
+async function tick(player, dealer, itr) {
   let reset;
   while (checkEventQueue()) {
-    reset = executeEvent();
+    reset = await executeEvent();
+    if (reset) eventQueue = [];
+    refreshUI({ player, dealer });
   }
 
-  refreshUI({ player, dealer });
   itr(reset);
 }
 
 function startMain(player = {}, dealer = {}, initialize = false) {
+  // TODO: going to have to refactor player/dealer bc it sucks
   if (initialize) {
-    ("resetting");
     delete player;
     delete dealer;
     [player, dealer] = init();
@@ -101,7 +102,7 @@ function startMain(player = {}, dealer = {}, initialize = false) {
   }
   const callback = (reset) => startMain(player, dealer, reset);
 
-  setTimeout(() => loop(player, dealer, callback), 0);
+  setTimeout(async () => tick(player, dealer, callback), 10);
 }
 
 startMain({}, {}, init);

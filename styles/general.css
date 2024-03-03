@@ -1,81 +1,87 @@
 * {
-    margin:0px;
+  margin: 0px;
 }
 
 html {
-    background-image: url("../images/sonic-casino.jpg");
-    background-position: bottom;
-    color:white;
-    font-size: 100%;
-    font-family: 'Silkscreen';
-    font-weight: bold;
-    font-style: normal;
+  background-image: url("../images/sonic-casino.jpg");
+  background-position: bottom;
+  color: white;
+  font-size: 100%;
+  font-family: "Silkscreen";
+  font-weight: bold;
+  font-style: normal;
 }
 
-body{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 main {
-    margin-bottom: 2rem;
-    width:80%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;  
-    border: 5px solid #3061E3;
-    border-radius: 1rem;
+  margin-bottom: 2rem;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 5px solid #3061e3;
+  border-radius: 1rem;
+  height: 80%;
 }
 
 span {
-    color: gold;
-    font-size: 2rem;
+  color: gold;
+  font-size: 2rem;
 }
-.dealer-cards-container, .player-cards-container {
-    line-height: 0px!important;
+.dealer-cards-container,
+.player-cards-container {
+  line-height: 0px !important;
 }
 img {
-    border:0.4rem solid #3061E3;
-    line-height: 0px!important;
-  }
+  border: 0.4rem solid #3061e3;
+  line-height: 0px !important;
+}
 
 p {
-    color:gold;
+  color: gold;
 }
 
 h2 {
-    color: #3061E3
+  color: #3061e3;
 }
 
-.dealer-box, .player-box, .player-lower {
-    width:100%;
-    text-align: center;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+.dealer-box,
+.player-box,
+.player-lower {
+  width: 100%;
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
-.dealer-box p, .player-box p, .player-lower p{
-    font-size: 1.5rem;
+.dealer-box p,
+.player-box p,
+.player-lower p {
+  font-size: 1.5rem;
 }
 
-.dealer-box h2, .player-box h2, .player-lower h2{
-    font-size: 2rem;
+.dealer-box h2,
+.player-box h2,
+.player-lower h2 {
+  font-size: 2rem;
 }
 
-
-.dealer-box img, .player-box img{
-    height: 9.3rem;
+.dealer-box img,
+.player-box img {
+  height: 9.3rem;
 }
 
-.dealer-box img { 
-    margin-top: 1rem;
+.dealer-box img {
+  margin-top: 1rem;
 }
 
-.player-box img { 
-    margin-bottom: 1rem;
+.player-box img {
+  margin-bottom: 1rem;
 }
-
-
