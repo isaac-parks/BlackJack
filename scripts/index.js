@@ -68,7 +68,7 @@ function checkEventQueue() {
   return !!eventQueue.length;
 }
 
-function executeEvent() {
+async function executeEvent() {
   const args = {};
   while (true) {
     const event = eventQueue.shift();
@@ -77,7 +77,7 @@ function executeEvent() {
       Object.assign(args, event);
       continue;
     }
-    return event(args);
+    return await event(args);
   }
 }
 
@@ -102,7 +102,7 @@ function startMain(player = {}, dealer = {}, initialize = false) {
   }
   const callback = (reset) => startMain(player, dealer, reset);
 
-  setTimeout(async () => tick(player, dealer, callback), 10);
+  setTimeout(async () => await tick(player, dealer, callback), 100);
 }
 
-startMain({}, {}, init);
+startMain({}, {}, true);

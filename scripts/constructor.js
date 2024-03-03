@@ -41,10 +41,9 @@ class Person {
 
     this.renderHand = () => {
       for (let i = this.cards.length; i < this.hand.length; i++) {
-        const index = this.hand[i] - 2;
-        this.cards.push(
-          images[index][Math.floor(Math.random() * images[index].length)]
-        );
+        const index = this.hand[i] - 2 >= 0 ? this.hand[i] - 2 : 9; //  temp fix for rendering aces (this whole thing needs rework)
+        const r = Math.floor(Math.random() * images[index].length);
+        this.cards.push(images[index][r]);
       }
 
       if (!this.dealer) {
