@@ -152,7 +152,7 @@ async function gameOver({ player, dealer }) {
 
   localStorage.setItem("chips", player.chips);
 
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  await new Promise((resolve) => setTimeout(resolve, 5000));
 
   return true;
 }
