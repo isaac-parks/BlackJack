@@ -83,7 +83,7 @@ function checkPlayerWin({ player, dealer }) {
     } else if (dealerSum === playerSum) {
       player.chips += player.currentBet;
       player.currentBet = 0;
-      pushToQueue(currentMessage, {
+      pushToQueue(changeMessageDisplay, {
         text: "Looks Like It's a Draw! Resetting...",
       });
       player.win = "push";
@@ -144,10 +144,11 @@ function checkDraw({ player, dealer }) {
 }
 
 async function gameOver({ player, dealer }) {
-  if (player.win) {
-    player.chips += player.currentBet * 2;
-  } else if (player.win === "push") {
+  if (player.win === 'push') {
     player.chips += player.currentBet;
+  }
+  else if (player.win) {
+    player.chips += player.currentBet * 2;
   }
 
   localStorage.setItem("chips", player.chips);

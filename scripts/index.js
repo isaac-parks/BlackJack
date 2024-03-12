@@ -93,6 +93,7 @@ async function executeEvent() {
       Object.assign(args, event);
       continue;
     }
+
     return await event(args);
   }
 }
