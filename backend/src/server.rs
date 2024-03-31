@@ -23,9 +23,7 @@ fn handle_connection(mut stream: TcpStream) {
     let buf_r = BufReader::new(&mut stream);
     let data_itr = buf_r.lines()
     .map(|result| result.unwrap());
-    // .collect();
     parse_request_ln(data_itr);
-    // println!("data received {:#?}", data_itr);
 }
 
 fn parse_request_ln<I: Iterator>(stream: I)
