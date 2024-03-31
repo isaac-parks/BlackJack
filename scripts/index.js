@@ -1,5 +1,6 @@
-const eventQueue = [];
-
+// TODO: refactor to use some sort of state management
+let eventQueue = [];
+let clearEvents = () => {};
 function createEvents(player, dealer) {
   const newGameBtn = document.querySelector("#newgame-btn");
   const drawBtn = document.querySelector("#draw-btn");
@@ -8,41 +9,56 @@ function createEvents(player, dealer) {
   const tenBtn = document.querySelector("#ten");
   const oneHundredBtn = document.querySelector("#onehundred");
   const fiveHundredBtn = document.querySelector("#fivehundred");
-  //click new game button - refreshes player/dealer hand, sets player alive
-  oneBtn.addEventListener(
-    "click",
-    registerEvent("adjustBet", { amount: 1, player: player })
-  );
 
-  tenBtn.addEventListener(
-    "click",
-    registerEvent("adjustBet", { amount: 10, player: player })
-  );
+  const eventListeners = [
+    {
+      element: oneBtn,
+      event: "click",
+      handler: registerEvent("adjustBet", { amount: 1, player }),
+    },
+    {
+      element: tenBtn,
+      event: "click",
+      handler: registerEvent("adjustBet", { amount: 10, player }),
+    },
+    {
+      element: oneHundredBtn,
+      event: "click",
+      handler: registerEvent("adjustBet", { amount: 100, player }),
+    },
+    {
+      element: fiveHundredBtn,
+      event: "click",
+      handler: registerEvent("adjustBet", { amount: 500, player }),
+    },
+    {
+      element: drawBtn,
+      event: "click",
+      handler: registerEvent("draw", { player, dealer }),
+    },
+    {
+      element: standBtn,
+      event: "click",
+      handler: registerEvent("checkPlayerWin", { player, dealer }),
+    },
+    {
+      element: newGameBtn,
+      event: "click",
+      handler: registerEvent("createNewGame", { player, dealer }),
+    },
+  ];
 
-  oneHundredBtn.addEventListener(
-    "click",
-    registerEvent("adjustBet", { amount: 100, player: player })
-  );
+  eventListeners.forEach(({ element, event, handler }) => {
+    element.addEventListener(event, handler);
+  });
 
-  fiveHundredBtn.addEventListener(
-    "click",
-    registerEvent("adjustBet", { amount: 500, player: player })
-  );
+  function clearEvents() {
+    eventListeners.forEach(({ element, event, handler }) => {
+      element.removeEventListener(event, handler);
+    });
+  }
 
-  drawBtn.addEventListener(
-    "click",
-    registerEvent("draw", { player: player, dealer: dealer })
-  );
-
-  standBtn.addEventListener(
-    "click",
-    registerEvent("checkPlayerWin", { player: player, dealer: dealer })
-  );
-
-  newGameBtn.addEventListener(
-    "click",
-    registerEvent("createNewGame", { player: player, dealer: dealer })
-  );
+  return clearEvents;
 }
 
 function registerEvent(name, args) {
@@ -68,7 +84,7 @@ function checkEventQueue() {
   return !!eventQueue.length;
 }
 
-function executeEvent() {
+async function executeEvent() {
   const args = {};
   while (true) {
     const event = eventQueue.shift();
@@ -77,31 +93,34 @@ function executeEvent() {
       Object.assign(args, event);
       continue;
     }
-    return event(args);
+
+    return await event(args);
   }
 }
 
-function loop(player, dealer, itr) {
+async function tick(player, dealer, itr) {
   let reset;
   while (checkEventQueue()) {
-    reset = executeEvent();
+    reset = await executeEvent();
+    if (reset) eventQueue = [];
+    refreshUI({ player, dealer });
   }
 
-  refreshUI({ player, dealer });
-  itr(reset);
+  await itr(reset);
 }
 
-function startMain(player = {}, dealer = {}, initialize = false) {
+async function startMain(player = {}, dealer = {}, initialize = false) {
+  // TODO: going to have to refactor player/dealer bc it sucks
   if (initialize) {
-    ("resetting");
+    clearEvents();
     delete player;
     delete dealer;
     [player, dealer] = init();
-    createEvents(player, dealer);
+    clearEvents = createEvents(player, dealer);
   }
-  const callback = (reset) => startMain(player, dealer, reset);
+  const callback = async (reset) => await startMain(player, dealer, reset);
 
-  setTimeout(() => loop(player, dealer, callback), 0);
+  setTimeout(async () => await tick(player, dealer, callback), 100);
 }
 
-startMain({}, {}, init);
+startMain({}, {}, true);
