@@ -24,12 +24,19 @@ fn handle_connection(mut stream: TcpStream) {
     let data_itr = buf_r.lines()
     .map(|result| result.unwrap());
     // .collect();
-
+    parse_request_ln(data_itr);
     // println!("data received {:#?}", data_itr);
 }
 
-fn parse_request_ln<I: Iterator>(mut stream: &I) {
-
+fn parse_request_ln<I: Iterator>(stream: I)
+where
+    I: Iterator<Item = String>,
+{
+    let headers_itr = stream
+        .take_while(|chunk| !chunk.is_empty());
+    
+    let more  = stream
+    .take_while(|chunk| !chunk.is_empty());
 }
 
 
