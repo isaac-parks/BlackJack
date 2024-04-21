@@ -5,7 +5,8 @@
 #### Randomly got the urge to add to the this project, so I'm adding a backend in Rust.
 
 - Converted to use a game loop instead of static events ✅
-- Create the backend ❌
+- Create the backend ✅
+- 
 
 ### Original
 
