@@ -32,8 +32,13 @@ impl WebSocketController {
 
 impl Controller for HttpController {
     fn create_response(&self) -> Response {
-        let resp_headers: HashMap<String, String> = HashMap::new();
-        // resp_headers.insert()
+        let websocket_key = String::from("258EAFA5-E914-47DA-95CA-C5AB0DC85B1");
+        let mut client_key = self.request.headers.get("Sec-WebSocket-Key").unwrap().clone(); //TODO
+        let resp_key = client_key.push_str(&websocket_key); //TODO 
+        let mut resp_headers: HashMap<String, String> = HashMap::new();
+        resp_headers.insert("StatusLine".to_string(), "HTTP/1.1 101 OK".to_string());
+        resp_headers.insert("Upgrade".to_string(), "websocket".to_string());
+        resp_headers.insert("Sec-WebSocket-Accept".to_string(), "websocket".to_string());
         
         Response::new()
     }

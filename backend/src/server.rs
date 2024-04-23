@@ -7,6 +7,8 @@ use std::io::Read;
 
 use crate::controller::controller;
 
+use sha1::{Sha1, Digest};
+
  #[derive(Debug)]
 pub enum RequestType {
     Http,
