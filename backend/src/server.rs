@@ -5,17 +5,19 @@ use std::collections::HashMap;
 use std::fs::read;
 use std::io::Read;
 
+use crate::controller::controller;
+
  #[derive(Debug)]
-enum RequestType {
+pub enum RequestType {
     Http,
     WebSocket
 }
 
 #[derive(Debug)]
-struct Request {
-    rtype: RequestType,
-    headers: HashMap<String, String>,
-    body: String
+pub struct Request {
+    pub _type: RequestType,
+    pub headers: HashMap<String, String>,
+    pub body: String
 }
 
 impl Request {
@@ -25,6 +27,7 @@ impl Request {
 
         let mut headers: HashMap<String, String> = HashMap::new();
         let mut body = String::new();
+        let mut request_type: RequestType = RequestType::Http;
 
         if let Some(req_line) = data_itr.next() {
             headers.insert(String::from("RequestLine"), req_line);
@@ -32,8 +35,7 @@ impl Request {
 
         let mut content_length = 0;
 
-        for line in data_itr {
-            let s = line;
+        while let Some(s) = data_itr.next() {
             if s.is_empty() {
                 break;
             }
@@ -43,6 +45,10 @@ impl Request {
                 let value = parts.next().unwrap_or("").trim().to_string();
                 if key.trim().eq_ignore_ascii_case("Content-Length") {
                     content_length = value.parse::<usize>().unwrap_or(0);
+                }
+
+                if key.trim().to_ascii_lowercase().contains("websocket") {
+                    request_type = RequestType::WebSocket;
                 }
                 headers.insert(key.trim().to_string(), value);
             }
@@ -55,7 +61,7 @@ impl Request {
         }
 
         Request {
-            rtype: RequestType::Http,
+            _type: request_type,
             headers: headers,
             body: body,
         }
@@ -66,13 +72,11 @@ fn run_server(listener: TcpListener) {
     for stream in listener.incoming() {
         let mut stream = stream.unwrap();
         if let Some(request) = handle_connection(&stream) {
-            println!("{:?}", request);
-            let html = read("C:\\Users\\Isaac\\Desktop\\code\\projects\\BlackJack\\backend\\src\\copy.html").unwrap();
-
+            controller(request);
+            // let html = read("C:\\Users\\Isaac\\Desktop\\code\\projects\\BlackJack\\backend\\src\\copy.html").unwrap();
             let response = "HTTP/1.1 200 OK\r\n\r\n";
-        
             stream.write_all(response.as_bytes()).unwrap();
-            stream.write_all(&html).unwrap();
+            // stream.write_all(&html).unwrap();
             if let Err(_) = stream.flush() {
                 println!("Error occured sending response.");
                 break;
@@ -83,17 +87,15 @@ fn run_server(listener: TcpListener) {
 
 fn handle_connection(stream: &TcpStream) -> Option<Request> {
     let r = Request::new_from_stream(&stream);
-    println!("{:?}", r);
     Some(r)
 }
 
 pub fn init() {
-    let port: &str = "1818"; // hardcoding for now
+    let port: &str = "1818";
     let host: &str = "127.0.0.1";
     let hn: &str = &format!("{}:{}", &host, &port);
 
-
-    println!("Starting server on port {}", &hn);
     let listener = TcpListener::bind(&hn).unwrap();
+    println!("Started on {}:{}", host, port);
     run_server(listener);
 }
