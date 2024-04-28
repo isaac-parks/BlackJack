@@ -67,8 +67,6 @@ impl Request {
     }
 }
 
-
-
 #[derive(Debug)]
 pub struct Response {
     pub headers: HashMap<String, String>,

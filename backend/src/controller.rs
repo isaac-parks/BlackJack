@@ -77,7 +77,6 @@ impl Controller for WebSocketController{
     }
 }
 
-
 pub fn controller(request: Request) -> Response {
     println!("{:?}", &request);
     let c = make_controller(request);

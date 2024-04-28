@@ -36,7 +36,6 @@ pub fn init() {
     run_server(listener);
 }
 
-
 // Test for response 
             // let html = read("C:\\Users\\Isaac\\Desktop\\code\\projects\\BlackJack\\backend\\src\\copy.html").unwrap();
             // let response = "HTTP/1.1 200 OK\r\n\r\n";
