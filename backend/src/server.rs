@@ -11,7 +11,6 @@ fn run_server(listener: TcpListener) {
         if let Some(request) = handle_connection(&stream) {
             let response: Response = controller(request);
             let header_str = response.headers_to_string();
-            dbg!(&header_str);
             stream.write_all(header_str.as_bytes()).unwrap();
             if let Err(_) = stream.flush() {
                 println!("Error occured sending response.");
