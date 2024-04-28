@@ -1,22 +1,104 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, io::{Read, Write}, net::TcpStream};
 
 use crate::shared::{Request, RequestType, Response};
 
 mod http;
 mod websocket;
 
-use sha1::{Sha1, Digest};
+use sha1::{digest::generic_array::functional, Digest, Sha1};
 use base64;
 
 
+use std::{thread, time::Duration};
+
+
 trait Controller {
-    fn create_response(&self) -> Response;
+    fn handle(&mut self);
 }
 struct HttpController {
-    request: Request
+    request: Request,
+    stream:  TcpStream
 }
+#[derive(PartialEq)]
+enum ConnectionStatus {
+    Open,
+    Closed
+}
+
+#[derive(Debug)]
+enum Opcode {
+    Cont,
+    Text,
+    Binary,
+    NonCtrl,
+    ConnClosed,
+    Ping,
+    Pong,
+    Ctrl
+}
+#[derive(Debug)]
+struct Frame {
+    is_final: bool,
+    opcode: Opcode,
+    is_masked: bool,
+    masking_key: u32,
+    payload_len: u8,
+    payload: String
+}
+
+impl Frame {
+    fn new(stream: &mut TcpStream) -> Self {
+        let mut f_buff: [u8; 2] = [0; 2];
+        stream.read_exact(&mut f_buff).unwrap();
+
+        // First Byte
+        let is_final = f_buff[0] & 0b10000000 != 0; // First bit is whether this is the final segment
+        let opcode = match f_buff[0] & 0b00001111 { // next 4 bits are the opcode
+            0x1 => Opcode::Text,
+            0x2 => Opcode::Binary,
+            _ => Opcode::Ctrl
+        };
+
+        // Second Byte
+        let is_masked = f_buff[1] & 0b10000000 != 0; // First bit is whether payload is masked
+        let payload_len = f_buff[1] & 0b01111111;
+
+
+        // TODO 3rd 4th 5th and 6th byte is masking-key
+        let mut mask_key: [u8; 4] = [0; 4];
+        if is_masked {
+            stream.read_exact(&mut mask_key).unwrap();
+        }
+
+        // payload buff
+        let mut payload_buff = vec![0u8; payload_len as usize];
+        stream.read_exact(&mut payload_buff).unwrap();
+        
+        if is_masked { // Demask payload
+            for i in 0..payload_len as usize {
+                payload_buff[i] ^= mask_key[i % 4];
+            }
+        }
+
+        let payload = String::from_utf8(payload_buff.to_vec()).unwrap();
+
+        dbg!(&payload);
+
+        Frame {
+            is_final,
+            opcode,
+            is_masked,
+            masking_key: 0,
+            payload_len,
+            payload
+        }
+    }
+}
+
 struct WebSocketController {
-    request: Request
+    request: Request,
+    stream: TcpStream,
+    conn_status: ConnectionStatus
 }
 
 impl WebSocketController {
@@ -28,10 +110,11 @@ impl WebSocketController {
                 return true;
             }
         }
+
         false
     }
 
-    fn do_handshake(&self) -> Response {
+    fn do_handshake(&mut self) {
         let mut resp_headers: HashMap<String, String> = HashMap::new();
 
         let client_key = self.request.headers.get("Sec-WebSocket-Key").unwrap().clone(); // TODO
@@ -43,8 +126,9 @@ impl WebSocketController {
         resp_headers.insert("Sec-WebSocket-Accept".to_string(), resp_key);
         
         let resp = Response::new_no_body(resp_headers);
+        let resp_str = resp.headers_to_string();
 
-        resp
+        write_to_stream(resp_str, &mut self.stream);
     }
 
     fn make_hs_key(&self, request_key: &String) -> String {
@@ -60,32 +144,46 @@ impl WebSocketController {
 
         base64_key
     }
+
+    fn incoming_frame(&mut self) {
+        let frame = Frame::new(&mut self.stream);
+        println!("{}", frame.payload);
+    }
 }
 
 impl Controller for HttpController {
-    fn create_response(&self) -> Response {
-        Response::new()
+    fn handle(&mut self) {
     }
 }
 
-impl Controller for WebSocketController{
-    fn create_response(&self) -> Response {
+impl Controller for WebSocketController {
+    fn handle(&mut self) {
         if self.check_handshake() {
-            return self.do_handshake();
+            self.do_handshake()
         }
-        Response::new()
+        loop {
+            self.incoming_frame();
+        }
     }
 }
 
-pub fn controller(request: Request) -> Response {
-    println!("{:?}", &request);
-    let c = make_controller(request);
-    c.create_response()
+pub fn handle_stream(stream: TcpStream) {
+    let mut c = make_controller(stream);
+    c.handle();
 }
 
-fn make_controller(request: Request) -> Box<dyn Controller> {
-    match request._type {
-        RequestType::Http => Box::new(HttpController {request}),
-        RequestType::WebSocket => Box::new(WebSocketController {request}),
+fn make_controller(stream: TcpStream) -> Box<dyn Controller> {
+    let init_req = Request::new_from_stream(&stream);
+    match init_req._type {
+        RequestType::Http => Box::new(HttpController {request: init_req, stream}),
+        RequestType::WebSocket => Box::new(WebSocketController {request: init_req, stream, conn_status:ConnectionStatus::Open}),
+    }
+}
+
+fn write_to_stream(content: String, stream: &mut TcpStream) {
+    let bytes = content.as_bytes();
+    stream.write_all(bytes).unwrap();
+    if let Err(_) = stream.flush() {
+        println!("Error occured sending response.");
     }
 }

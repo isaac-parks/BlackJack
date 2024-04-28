@@ -1,3 +1,27 @@
-<html>
-  <h1>YO WHAT YUP FORM MY RUST SERVER!</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WebSocket Test</title>
+<script>
+    var ws = new WebSocket("ws://localhost:1818/");
+    ws.onopen = function() {
+        console.log("Connected!");
+        ws.send("Hello Server!");
+    };
+    ws.onmessage = function(evt) {
+        console.log("Message from server: " + evt.data);
+    };
+    ws.onclose = function() {
+        console.log("Connection closed.");
+    };
+    ws.onerror = function(err) {
+        console.error("WebSocket encountered error: ", err.message, "Closing socket");
+        ws.close();
+    };
+</script>
+</head>
+<body>
+    <h1>WebSocket Client</h1>
+</body>
 </html>
