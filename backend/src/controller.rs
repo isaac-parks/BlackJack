@@ -122,7 +122,6 @@ mod websocket {
             };
 
             dbg!(&frame);
-
             Some(frame)
         }
     }
@@ -191,7 +190,7 @@ mod websocket {
         fn incoming_frame(&mut self) {
             let frame = Frame::new(&mut self.stream);
             if let Some(f) = frame {
-                if f.payload == "pingme" { // Temp for testing ping functionality 
+                if f.payload == "pingme" { // Temp for testing ping 
                     self.send_ping();
                 }
                 println!("{}", f.payload);
@@ -205,7 +204,6 @@ mod websocket {
             let r = self.stream.write_all(&ping);
             if let Ok(()) = r {
                 if let Ok(_) = self.stream.flush() {
-                    print!("Sent ping");
                     return true;
                 }
             }
@@ -214,7 +212,6 @@ mod websocket {
         }
     }
 }
-
 
 mod http {
     use std::net::TcpStream;
