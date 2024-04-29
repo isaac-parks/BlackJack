@@ -1,16 +1,13 @@
 use std::{collections::HashMap, io::{Read, Write}, net::TcpStream};
+use std::time::Duration;
 
 use crate::shared::{Request, RequestType, Response};
 
 mod http;
 mod websocket;
 
-use sha1::{digest::generic_array::functional, Digest, Sha1};
+use sha1::{Digest, Sha1};
 use base64;
-
-
-use std::{thread, time::Duration};
-
 
 trait Controller {
     fn handle(&mut self);
@@ -47,51 +44,62 @@ struct Frame {
 }
 
 impl Frame {
-    fn new(stream: &mut TcpStream) -> Self {
-        let mut f_buff: [u8; 2] = [0; 2];
-        stream.read_exact(&mut f_buff).unwrap();
+    fn new(stream: &mut TcpStream) -> Option<Self> {
+        let mut op_buff: [u8; 2] = [0; 2];
+        let read_op = stream.read_exact(&mut op_buff);
+
+        if let Err(_) = read_op {
+            println!("Exiting loop");
+            return None;
+        }
 
         // First Byte
-        let is_final = f_buff[0] & 0b10000000 != 0; // First bit is whether this is the final segment
-        let opcode = match f_buff[0] & 0b00001111 { // next 4 bits are the opcode
+        let is_final = op_buff[0] & 0b10000000 != 0; // First bit is whether this is the final segment of the message
+        let opcode = match op_buff[0] & 0b00001111 { // next 4 bits are the opcode
             0x1 => Opcode::Text,
             0x2 => Opcode::Binary,
             _ => Opcode::Ctrl
         };
 
         // Second Byte
-        let is_masked = f_buff[1] & 0b10000000 != 0; // First bit is whether payload is masked
-        let payload_len = f_buff[1] & 0b01111111;
+        let is_masked = op_buff[1] & 0b10000000 != 0; // First bit is whether payload is masked
+        let payload_len = op_buff[1] & 0b01111111;
 
 
-        // TODO 3rd 4th 5th and 6th byte is masking-key
+        // 3rd 4th 5th and 6th byte is masking-key
         let mut mask_key: [u8; 4] = [0; 4];
         if is_masked {
             stream.read_exact(&mut mask_key).unwrap();
         }
 
-        // payload buff
+        // Rest will be payload
         let mut payload_buff = vec![0u8; payload_len as usize];
         stream.read_exact(&mut payload_buff).unwrap();
         
-        if is_masked { // Demask payload
+        if is_masked { // Demask payload if needed
             for i in 0..payload_len as usize {
                 payload_buff[i] ^= mask_key[i % 4];
             }
         }
 
-        let payload = String::from_utf8(payload_buff.to_vec()).unwrap();
+        let mut payload = String::new();
+        let payload_str = String::from_utf8(payload_buff.to_vec());
+        if let Ok(s) = payload_str {
+            payload.push_str(&s)
+        }
 
-        dbg!(&payload);
-
-        Frame {
+        let frame = Frame {
             is_final,
             opcode,
             is_masked,
             masking_key: 0,
             payload_len,
             payload
-        }
+        };
+
+        dbg!(&frame);
+
+        Some(frame)
     }
 }
 
@@ -147,7 +155,9 @@ impl WebSocketController {
 
     fn incoming_frame(&mut self) {
         let frame = Frame::new(&mut self.stream);
-        println!("{}", frame.payload);
+        if let Some(f) = frame {
+            println!("{}", f.payload);
+        }
     }
 }
 
@@ -158,6 +168,7 @@ impl Controller for HttpController {
 
 impl Controller for WebSocketController {
     fn handle(&mut self) {
+        let _ = self.stream.set_read_timeout(Some(Duration::from_millis(50)));
         if self.check_handshake() {
             self.do_handshake()
         }
