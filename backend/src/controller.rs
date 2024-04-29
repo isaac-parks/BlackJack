@@ -33,6 +33,7 @@ trait Controller {
 mod websocket {
     use sha1::{Digest, Sha1};
     use base64;
+    use std::io::Write;
     use std::{collections::HashMap, io::Read, net::TcpStream};
     use std::time::Duration;
     use super::Controller;
@@ -44,7 +45,7 @@ mod websocket {
         Open,
         Closed
     }
-
+    #[derive(Debug)]
     enum Opcode {
         Cont,
         Text,
@@ -55,7 +56,7 @@ mod websocket {
         Pong,
         Ctrl
     }
-
+    #[derive(Debug)]
     struct Frame {
         is_final: bool,
         opcode: Opcode,
@@ -79,6 +80,8 @@ mod websocket {
             let opcode = match op_buff[0] & 0b00001111 { // next 4 bits are the opcode
                 0x1 => Opcode::Text,
                 0x2 => Opcode::Binary,
+                0x9 => Opcode::Ping,
+                0xA => Opcode::Pong,
                 _ => Opcode::Ctrl
             };
 
@@ -117,6 +120,8 @@ mod websocket {
                 payload_len,
                 payload
             };
+
+            dbg!(&frame);
 
             Some(frame)
         }
@@ -186,8 +191,26 @@ mod websocket {
         fn incoming_frame(&mut self) {
             let frame = Frame::new(&mut self.stream);
             if let Some(f) = frame {
+                if f.payload == "pingme" { // Temp for testing ping functionality 
+                    self.send_ping();
+                }
                 println!("{}", f.payload);
             }
+        }
+
+        fn send_ping(&mut self) -> bool {
+            let op_byte = 0b10001001;
+            let payload_byte = 0b00000000;
+            let ping: [u8; 2] = [op_byte, payload_byte];
+            let r = self.stream.write_all(&ping);
+            if let Ok(()) = r {
+                if let Ok(_) = self.stream.flush() {
+                    print!("Sent ping");
+                    return true;
+                }
+            }
+
+            false
         }
     }
 }
