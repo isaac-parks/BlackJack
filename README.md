@@ -6,7 +6,6 @@
 
 - Converted to use a game loop instead of static events ✅
 - Create the backend ✅
-- 
 
 ### Original
 
